@@ -8,7 +8,7 @@ public class ExampleOSHDB {
     public static void main(String[] args) throws Exception {
         OSHDB oshdb = new OSHDB_H2("./karlsruhe-regbez").multithreading(true);
         RestServer restServer = new RestServer();
-        restServer.register(new MeasureNumberOfElements(oshdb));
+        restServer.register(new MeasureLengthOfElements(oshdb));
         restServer.run();
     }
 }
