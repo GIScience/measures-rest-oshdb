@@ -15,11 +15,11 @@ import java.util.SortedMap;
  *
  * @author Franz-Benjamin Mocnik
  */
-@Path("api/" + MeasureLengthOfElements.name)
-public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnapshotMapper, OSMEntitySnapshot> {
-    public static final String name = "measure-length-of-elements";
+@Path("api/" + MeasureTest.name)
+public class MeasureTest extends MeasureOSHDB<Double, OSMEntitySnapshotMapper, OSMEntitySnapshot> {
+    public static final String name = "measure-test";
 
-    public MeasureLengthOfElements(OSHDB oshdb) {
+    public MeasureTest(OSHDB oshdb) {
         super(oshdb);
     }
 
