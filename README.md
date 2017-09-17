@@ -21,7 +21,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, a new function `compute(Mapper<O> mapper)` can be overwritten in order to implement the actual measure.  As a parameter, a mapper object is provided that already refers to the corresponding bounding box and the corresponding point in time.  The mapper can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).  In order to easily aggregate the data by grid cells, a function `handleGrid` is provided that accepts as parameters a geometry and a value.  The function returns an `ImmutablePair`, like is required for the function `sumAggregate`.
+Instead of the function `compute(BoundingBox bbox)`, a new function `compute(Mapper<O> mapper)` can be overwritten in order to implement the actual measure.  As a parameter, a mapper object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `1900-01-01T00:00Z` is automatically used as a default value.  The mapper can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).  In order to easily aggregate the data by grid cells, a function `handleGrid` is provided that accepts as parameters a geometry and a value.  The function returns an `ImmutablePair`, like is required for the function `sumAggregate`.
 
 ## Instantiation the Measure
 
