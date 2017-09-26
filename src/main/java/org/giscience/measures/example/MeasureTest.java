@@ -11,10 +11,6 @@ import org.heigit.bigspatialdata.oshdb.util.Geo;
 import javax.ws.rs.Path;
 import java.util.SortedMap;
 
-/**
- *
- * @author Franz-Benjamin Mocnik
- */
 @Path("api/" + MeasureTest.name)
 public class MeasureTest extends MeasureOSHDB<Double, OSMEntitySnapshotMapper, OSMEntitySnapshot> {
     public static final String name = "measure-test";
