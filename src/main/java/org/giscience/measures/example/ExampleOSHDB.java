@@ -2,7 +2,7 @@ package org.giscience.measures.example;
 
 import org.giscience.measures.rest.server.RestServer;
 import org.heigit.bigspatialdata.oshdb.OSHDB;
-import org.heigit.bigspatialdata.oshdb.OSHDB_H2;
+import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_H2;
 
 public class ExampleOSHDB {
     public static void main(String[] args) throws Exception {
