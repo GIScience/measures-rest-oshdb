@@ -6,9 +6,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.giscience.measures.rest.utils.BoundingBox;
 import org.giscience.utils.geogrid.geometry.GridCell;
 import org.heigit.bigspatialdata.oshdb.OSHDB;
-import org.heigit.bigspatialdata.oshdb.api.mapper.Mapper;
-import org.heigit.bigspatialdata.oshdb.api.mapper.MapperFactory;
-import org.heigit.bigspatialdata.oshdb.api.objects.Timestamps;
+import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
+import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapperFactory;
+import org.heigit.bigspatialdata.oshdb.api.objects.OSHDBTimestamps;
 
 import java.lang.reflect.ParameterizedType;
 import java.time.ZonedDateTime;
@@ -34,9 +34,9 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
     @Override
     protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom) throws Exception {
         if (dateFrom == null) dateFrom = ZonedDateTime.of(1900, 1, 1, 0, 0, 0, 0, UTC);
-        Mapper mapper = ((Mapper) this._mapperClass.getMethod("using", OSHDB.class).invoke(null, this._oshdb))
-                .boundingBox(new org.heigit.bigspatialdata.oshdb.util.BoundingBox(bbox.minLon, bbox.maxLon, bbox.minLat, bbox.maxLat))
-                .timestamps(new Timestamps(dateFrom.getYear(), date.getYear(), dateFrom.getMonthValue(), date.getMonthValue(), dateFrom.getDayOfMonth(), date.getDayOfMonth()));
+        MapReducer mapper = ((MapReducer) this._mapperClass.getMethod("on", OSHDB.class).invoke(null, this._oshdb))
+                .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.BoundingBox(bbox.minLon, bbox.maxLon, bbox.minLat, bbox.maxLat))
+                .timestamps(new OSHDBTimestamps(dateFrom.getYear(), date.getYear(), dateFrom.getMonthValue(), date.getMonthValue(), dateFrom.getDayOfMonth(), date.getDayOfMonth()));
         return this.compute(mapper);
     }
 
@@ -49,5 +49,5 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
         }
     }
 
-    public abstract SortedMap<GridCell, R> compute(Mapper<O> mapper) throws Exception;
+    public abstract SortedMap<GridCell, R> compute(MapReducer<O> mapper) throws Exception;
 }
