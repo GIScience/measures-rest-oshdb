@@ -29,7 +29,7 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshotView, OSM
         return mapper
                 .filterByTag("highway", "residential")
                 .filterByTag("maxspeed")
-                .aggregate(snapshot -> this.gridCell(snapshot.getGeometry()))
+                .aggregate(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }

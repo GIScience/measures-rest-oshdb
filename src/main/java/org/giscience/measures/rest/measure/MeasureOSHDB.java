@@ -8,6 +8,7 @@ import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_JDBC;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapperFactory;
 import org.heigit.bigspatialdata.oshdb.api.objects.OSHDBTimestamps;
+import org.heigit.bigspatialdata.oshdb.api.objects.OSMEntitySnapshot;
 
 import java.lang.reflect.ParameterizedType;
 import java.time.ZonedDateTime;
@@ -53,6 +54,10 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public GridCell gridCell(OSMEntitySnapshot snapshot) {
+        return this.gridCell(snapshot.getGeometry());
     }
 
     public abstract SortedMap<GridCell, R> compute(MapReducer<O> mapper) throws Exception;
