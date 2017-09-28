@@ -1,8 +1,6 @@
 package org.giscience.measures.rest.measure;
 
 import com.vividsolutions.jts.geom.Geometry;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.giscience.measures.rest.utils.BoundingBox;
 import org.giscience.utils.geogrid.geometry.GridCell;
 import org.heigit.bigspatialdata.oshdb.OSHDB;
@@ -48,9 +46,9 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
         return this.compute(mapper);
     }
 
-    public Pair<GridCell, R> handleGrid(Geometry g, R r) {
+    public GridCell gridCell(Geometry g) {
         try {
-            return ImmutablePair.of(this._grid.cellForCentroid(g), r);
+            return this._grid.cellForCentroid(g);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
