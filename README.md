@@ -11,27 +11,53 @@ A measure that consumes data from the [HeiGIT OSHDB](???) should extend the clas
 public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnapshotMapper, OSMEntitySnapshot> {
     public static final String name = "measure-length-of-elements";
 
+    public MeasureTest(OSHDB_JDBC oshdb) {
+        super(oshdb);
+    }
+
+    public MeasureTest(OSHDB oshdb, OSHDB_JDBC oshdb_keydb) {
+        super(oshdb, oshdb_keydb);
+    }
+
     @Override
-    public SortedMap<GridCell, Double> compute(Mapper<OSMEntitySnapshot> mapper) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapReducer<OSMEntitySnapshot> mapper) throws Exception {
         return mapper
-                .filterByTagValue("highway", "residential")
-                .filterByTagKey("maxspeed")
-                .sumAggregate(snapshot -> this.handleGrid(snapshot.getGeometry(), Geo.lengthOf(snapshot.getGeometry())));
+                .filterByTag("highway", "residential")
+                .filterByTag("maxspeed")
+                .aggregate(this::gridCell)
+                .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
+                .sum();
     }
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, a new function `compute(Mapper<O> mapper)` can be overwritten in order to implement the actual measure.  As a parameter, a mapper object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `1900-01-01T00:00Z` is automatically used as a default value.  The mapper can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).  In order to easily aggregate the data by grid cells, a function `handleGrid` is provided that accepts as parameters a geometry and a value.  The function returns an `ImmutablePair`, like is required for the function `sumAggregate`.
+Instead of the function `compute(BoundingBox bbox)`, a new function `compute(Mapper<O> mapper)` can be overwritten in order to implement the actual measure.  As a parameter, a mapper object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `1900-01-01T00:00Z` is automatically used as a default value.  The mapper can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
 
-## Instantiation the Measure
+In order to aggregate the data by grid cells, a function `gridCell` is provided that accepts as parameters a geometry, or a `OSHDBEntitySnapshot`.  Accordingly, the aggregation can either shortly be written as in the above example, or as follows in case it should be aggregated manually:
+
+```java
+                .aggregate(snapshot -> this.gridCell(snapshot.getGeometry()))
+```
+This way of aggregation is of particular interest when the data should not be aggregated by the centroid of the geometry, but by the first node of the geometry, by the centroid of the convex hull, etc.
+
+## Instantiation of the Measure
 
 In contrast to the class `Measure`, the constructor of the class `MeasureOSHDB` accepts an `OSHDB` object as a parameter.  A typical way of running the REST server is as follows:
 
 ```java
-OSHDB oshdb = new OSHDB_H2(...);
+OSHDB_H2 oshdb = new OSHDB_H2(...);
 RestServer restServer = new RestServer();
 restServer.register(new MeasureLengthOfElements(oshdb));
 restServer.run();
+```
+
+Instead of using only one database for the data as well as for the keytables, also two databases can be used (compare the documentation of the [HeiGIT OSHDB](???)):
+
+```java
+OSHDB oshdb = new OSHDB_H2(...).multithreading(true);
+OSHDB_JDBC oshdb_keydb = new OSHDB_H2(...);
+RestServer restServer = new RestServer();
+restServer.register(new MeasureLengthOfElements(oshdb, oshdb_keydb));
 ```
 
 ## Author
