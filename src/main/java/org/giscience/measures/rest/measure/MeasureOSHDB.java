@@ -40,7 +40,7 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
 
     @Override
     protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom) throws Exception {
-        if (dateFrom == null) dateFrom = ZonedDateTime.of(1900, 1, 1, 0, 0, 0, 0, UTC);
+        if (dateFrom == null) dateFrom = ZonedDateTime.of(2004, 1, 1, 0, 0, 0, 0, UTC);
         MapReducer mapper = ((MapReducer) this._mapperClass.getMethod("on", OSHDB.class).invoke(null, this._oshdb))
                 .keytables(this._oshdb_keydb)
                 .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.BoundingBox(bbox.minLon, bbox.maxLon, bbox.minLat, bbox.maxLat))
