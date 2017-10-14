@@ -29,7 +29,7 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshotView, OSM
         return mapReducer
                 .where("highway", "residential")
                 .where("maxspeed")
-                .aggregate(this::gridCell)
+                .aggregateBy(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }

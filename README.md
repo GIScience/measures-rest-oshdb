@@ -24,7 +24,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnaps
         return mapper
                 .where("highway", "residential")
                 .where("maxspeed")
-                .aggregate(this::gridCell)
+                .aggregateBy(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }
@@ -36,7 +36,7 @@ Instead of the function `compute(BoundingBox bbox)`, a new function `compute(Map
 In order to aggregate the data by grid cells, a function `gridCell` is provided that accepts as parameters a geometry, or a `OSHDBEntitySnapshot`.  Accordingly, the aggregation can either shortly be written as in the above example, or as follows in case it should be aggregated manually:
 
 ```java
-                .aggregate(snapshot -> this.gridCell(snapshot.getGeometry()))
+                .aggregateBy(snapshot -> this.gridCell(snapshot.getGeometry()))
 ```
 This way of aggregation is of particular interest when the data should not be aggregated by the centroid of the geometry, but by the first node of the geometry, by the centroid of the convex hull, etc.
 
