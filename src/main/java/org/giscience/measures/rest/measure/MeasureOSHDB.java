@@ -12,6 +12,7 @@ import org.heigit.bigspatialdata.oshdb.api.objects.OSMEntitySnapshot;
 
 import java.lang.reflect.ParameterizedType;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.SortedMap;
 
 import static java.time.ZoneOffset.UTC;
@@ -43,7 +44,7 @@ public abstract class MeasureOSHDB<R, M extends MapperFactory, O> extends Measur
         MapReducer mapper = ((MapReducer) this._mapperClass.getMethod("on", OSHDB.class).invoke(null, this._oshdb))
                 .keytables(this._oshdb_keydb)
                 .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.BoundingBox(bbox.minLon, bbox.maxLon, bbox.minLat, bbox.maxLat))
-                .timestamps(new OSHDBTimestamps(dateFrom.getYear(), date.getYear(), dateFrom.getMonthValue(), date.getMonthValue(), dateFrom.getDayOfMonth(), date.getDayOfMonth()));
+                .timestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), OSHDBTimestamps.Interval.MONTHLY);
         return this.compute(mapper);
     }
 

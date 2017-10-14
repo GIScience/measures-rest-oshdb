@@ -27,8 +27,8 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshotView, OSM
     @Override
     public SortedMap<GridCell, Number> compute(MapReducer<OSMEntitySnapshot> mapReducer) throws Exception {
         return mapReducer
-                .filterByTag("highway", "residential")
-                .filterByTag("maxspeed")
+                .where("highway", "residential")
+                .where("maxspeed")
                 .aggregate(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
