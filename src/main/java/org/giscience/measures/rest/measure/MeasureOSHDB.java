@@ -2,8 +2,8 @@ package org.giscience.measures.rest.measure;
 
 import com.vividsolutions.jts.geom.Geometry;
 import org.giscience.measures.rest.utils.BoundingBox;
-import org.giscience.utils.geogrid.geometry.GridCell;
 import org.heigit.bigspatialdata.oshdb.OSHDB;
+import org.giscience.utils.geogrid.cells.GridCell;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_JDBC;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapperFactory;
