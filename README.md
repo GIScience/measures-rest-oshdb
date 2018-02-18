@@ -4,18 +4,18 @@ The library `Measues REST OSHDB` provides an extension to the library [Measures 
 
 ## Implementing a Measure
 
-A measure that consumes data from the [HeiGIT OSHDB](???) should extend the class `MeasureOSHDB<R, M extends MapperFactory, O>`.  Here, `R` is a generic parameter that refers to the result of the measure; `M` a parameter that refers to which MapperFactory should be used; and `O` the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
+A measure that consumes data from the [HeiGIT OSHDB](???) should extend the class `MeasureOSHDB<R, O extends OSHDB_MapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
 
 ```java
 @Path("api/" + MeasureLengthOfElements.name)
-public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnapshotMapper, OSMEntitySnapshot> {
+public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnapshot> {
     public static final String name = "measure-length-of-elements";
 
     public MeasureTest(OSHDB_JDBC oshdb) {
         super(oshdb);
     }
 
-    public MeasureTest(OSHDB oshdb, OSHDB_JDBC oshdb_keydb) {
+    public MeasureTest(OSHDB_Database, OSHDB_JDBC oshdb_keydb) {
         super(oshdb, oshdb_keydb);
     }
 
@@ -45,16 +45,16 @@ This way of aggregation is of particular interest when the data should not be ag
 In contrast to the class `Measure`, the constructor of the class `MeasureOSHDB` accepts an `OSHDB` object as a parameter.  A typical way of running the REST server is as follows:
 
 ```java
-OSHDB_H2 oshdb = new OSHDB_H2(...);
+OSHDB_Database oshdb = new OSHDB_H2(...);
 RestServer restServer = new RestServer();
 restServer.register(new MeasureLengthOfElements(oshdb));
 restServer.run();
 ```
 
-Instead of using only one database for the data as well as for the keytables, also two databases can be used (compare the documentation of the [HeiGIT OSHDB](???)):
+Instead of using only one database for the data as well as for the keytables, also two separate databases can be used (compare the documentation of the [HeiGIT OSHDB](???)):
 
 ```java
-OSHDB oshdb = new OSHDB_H2(...).multithreading(true);
+OSHDB_Database oshdb = new OSHDB_H2(...).multithreading(true);
 OSHDB_JDBC oshdb_keydb = new OSHDB_H2(...);
 RestServer restServer = new RestServer();
 restServer.register(new MeasureLengthOfElements(oshdb, oshdb_keydb));

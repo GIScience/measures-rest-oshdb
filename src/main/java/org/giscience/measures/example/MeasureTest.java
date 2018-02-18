@@ -1,26 +1,25 @@
 package org.giscience.measures.example;
 
 import org.giscience.measures.rest.measure.MeasureOSHDB;
-import org.heigit.bigspatialdata.oshdb.OSHDB;
 import org.giscience.utils.geogrid.cells.GridCell;
+import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_Database;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_JDBC;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
-import org.heigit.bigspatialdata.oshdb.api.mapreducer.OSMEntitySnapshotView;
-import org.heigit.bigspatialdata.oshdb.api.objects.OSMEntitySnapshot;
-import org.heigit.bigspatialdata.oshdb.util.Geo;
+import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
+import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 
 import javax.ws.rs.Path;
 import java.util.SortedMap;
 
 @Path("api/" + MeasureTest.name)
-public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshotView, OSMEntitySnapshot> {
+public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     public static final String name = "measure-test";
 
     public MeasureTest(OSHDB_JDBC oshdb) {
         super(oshdb);
     }
 
-    public MeasureTest(OSHDB oshdb, OSHDB_JDBC oshdb_keydb) {
+    public MeasureTest(OSHDB_Database oshdb, OSHDB_JDBC oshdb_keydb) {
         super(oshdb, oshdb_keydb);
     }
 
