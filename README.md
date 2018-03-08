@@ -4,7 +4,7 @@ The library `Measues REST OSHDB` provides an extension to the library [Measures 
 
 ## Implementing a Measure
 
-A measure that consumes data from the [HeiGIT OSHDB](???) should extend the class `MeasureOSHDB<R, O extends OSHDB_MapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
+A measure that consumes data from the [HeiGIT OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDB_MapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
 
 ```java
 @Path("api/" + MeasureLengthOfElements.name)
