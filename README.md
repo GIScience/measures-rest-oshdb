@@ -31,7 +31,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Double, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, a new function `compute(MapReducer<O> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapReducer<O> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
 
 In order to aggregate the data by grid cells, a function `gridCell` is provided that accepts as parameters a geometry, or a `OSHDBEntitySnapshot`.  Accordingly, the aggregation can either shortly be written as in the above example, or as follows in case it should be aggregated manually:
 
