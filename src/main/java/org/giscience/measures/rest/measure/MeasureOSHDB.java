@@ -3,12 +3,12 @@ package org.giscience.measures.rest.measure;
 import com.vividsolutions.jts.geom.Geometry;
 import org.giscience.measures.rest.utils.BoundingBox;
 import org.giscience.utils.geogrid.cells.GridCell;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_Database;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDB_JDBC;
+import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
+import org.heigit.bigspatialdata.oshdb.api.db.OSHDBJdbc;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
-import org.heigit.bigspatialdata.oshdb.api.object.OSHDB_MapReducible;
+import org.heigit.bigspatialdata.oshdb.api.object.OSHDBMapReducible;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
-import org.heigit.bigspatialdata.oshdb.api.utils.OSHDBTimestamps;
+import org.heigit.bigspatialdata.oshdb.util.time.OSHDBTimestamps;
 
 import java.lang.reflect.ParameterizedType;
 import java.time.ZonedDateTime;
@@ -21,16 +21,16 @@ import static java.time.ZoneOffset.UTC;
  *
  * @author Franz-Benjamin Mocnik
  */
-public abstract class MeasureOSHDB<R, O extends OSHDB_MapReducible> extends Measure<R> {
-    private OSHDB_Database _oshdb;
-    private OSHDB_JDBC _oshdb_keydb;
+public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measure<R> {
+    private OSHDBDatabase _oshdb;
+    private OSHDBJdbc _oshdb_keydb;
     private Class<O> _mapperClass;
 
-    public MeasureOSHDB(OSHDB_JDBC oshdb) {
+    public MeasureOSHDB(OSHDBJdbc oshdb) {
         this(oshdb, oshdb);
     }
 
-    public MeasureOSHDB(OSHDB_Database oshdb, OSHDB_JDBC oshdb_keydb) {
+    public MeasureOSHDB(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
         super();
         this._oshdb = oshdb;
         this._oshdb_keydb = oshdb_keydb;
@@ -43,7 +43,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDB_MapReducible> extends Meas
         if (dateFrom == null) dateFrom = ZonedDateTime.of(2004, 1, 1, 0, 0, 0, 0, UTC);
         MapReducer<O> mapper = (MapReducer) this._oshdb.createMapReducer(this._mapperClass)
                 .keytables(this._oshdb_keydb)
-                .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.BoundingBox(bbox.minLon, bbox.maxLon, bbox.minLat, bbox.maxLat))
+                .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat))
                 .timestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), OSHDBTimestamps.Interval.MONTHLY);
         return this.compute(mapper);
     }
@@ -61,5 +61,5 @@ public abstract class MeasureOSHDB<R, O extends OSHDB_MapReducible> extends Meas
         return this.gridCell(snapshot.getGeometry());
     }
 
-    public abstract SortedMap<GridCell, R> compute(MapReducer<O> mapper) throws Exception;
+    public abstract SortedMap<GridCell, R> compute(MapReducer<O> mapReducer) throws Exception;
 }
