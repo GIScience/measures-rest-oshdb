@@ -4,7 +4,7 @@ import org.giscience.measures.rest.measure.MeasureOSHDB;
 import org.giscience.utils.geogrid.cells.GridCell;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDBJdbc;
-import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
+import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 
@@ -24,11 +24,10 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     }
 
     @Override
-    public SortedMap<GridCell, Number> compute(MapReducer<OSMEntitySnapshot> mapReducer) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer) throws Exception {
         return mapReducer
                 .where("highway", "residential")
                 .where("maxspeed")
-                .aggregateBy(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }

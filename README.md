@@ -20,25 +20,19 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
     }
 
     @Override
-    public SortedMap<GridCell, Number> compute(MapReducer<OSMEntitySnapshot> mapReducer) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer) throws Exception {
         return mapReducer
                 .where("highway", "residential")
                 .where("maxspeed")
-                .aggregateBy(this::gridCell)
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapReducer<O> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, o> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
 
-In order to aggregate the data by grid cells, a function `gridCell` is provided that accepts as parameters a geometry, or a `OSHDBEntitySnapshot`.  Accordingly, the aggregation can either shortly be written as in the above example, or as follows in case it should be aggregated manually:
-
-```java
-                .aggregateBy(snapshot -> this.gridCell(snapshot.getGeometry()))
-```
-This way of aggregation is of particular interest when the data should not be aggregated by the centroid of the geometry, but by the first node of the geometry, by the centroid of the convex hull, etc.
+The data is automatically aggregated by the `MapAggregator`.  If, however, the data shall be aggregated manually, the method `gridCell` can be used.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry, but by the first node of the geometry, by the centroid of the convex hull, etc.
 
 ## Instantiation of the Measure
 
