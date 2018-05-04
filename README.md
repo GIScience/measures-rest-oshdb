@@ -1,10 +1,10 @@
 # Measures REST OSHDB
 
-The library `Measues REST OSHDB` provides an extension to the library [Measures REST](https://github.com/giscience/measures-rest).  It aids with implementing a measure that consumes data from the [HeiGIT OSHDB](???).
+The library `Measues REST OSHDB` provides an extension to the library [Measures REST](https://github.com/giscience/measures-rest).  It aids with implementing a measure that consumes data from the [OpenStreetMap History Database (OSHDB)](???).
 
 ## Implementing a Measure
 
-A measure that consumes data from the [HeiGIT OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
+A measure that consumes data from the [OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped. As an example, one may extend the class `MeasureOSHDB` as follows:
 
 ```java
 @Path("api/" + MeasureLengthOfElements.name)
@@ -30,7 +30,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, o> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [HeiGIT OSHDB](???).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, o> mapReducer)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).
 
 The data is automatically aggregated by the `MapAggregator`.  If, however, the data shall be aggregated manually, the method `gridCell` can be used.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry but rather by the first node of the geometry, by the centroid of the convex hull, etc.
 
@@ -45,7 +45,7 @@ restServer.register(new MeasureLengthOfElements(oshdb));
 restServer.run();
 ```
 
-Instead of using only one database for the data as well as for the keytables, also two separate databases can be used (compare the documentation of the [HeiGIT OSHDB](???)):
+Instead of using only one database for the data as well as for the keytables, also two separate databases can be used (compare the documentation of the [OSHDB](???)):
 
 ```java
 OSHDBDatabase oshdb = new OSHDBH2(...).multithreading(true);
