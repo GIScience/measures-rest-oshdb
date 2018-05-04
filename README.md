@@ -22,8 +22,8 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
     @Override
     public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer) throws Exception {
         return mapReducer
-                .where("highway", "residential")
-                .where("maxspeed")
+                .osmTag("highway", "residential")
+                .osmTag("maxspeed")
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
                 .sum();
     }
