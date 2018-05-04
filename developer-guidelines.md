@@ -2,7 +2,7 @@
 
 Please adhere to the following rules:
 
-* All additions to and changes of the code need to be *documented* when commited.
+* All additions to and changes of the code need to be *documented* when committed.
 * The master branch is required to only contain *stable code*.
 * Changes need to be *backward compatible*.
 
