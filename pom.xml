@@ -31,10 +31,6 @@
     </dependencies>
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -47,6 +43,10 @@
             <id>oshdb-snapshots</id>
             <name>Heigit/GIScience maven repository (snapshots)</name>
             <url>http://repo.heigit.org/artifactory/libs-snapshot-local</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <properties>
