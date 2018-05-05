@@ -30,6 +30,11 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     }
 
     @Override
+    public Integer intervalInDays() {
+        return 30;
+    }
+
+    @Override
     public Boolean refersToTimeSpan() {
         return false;
     }

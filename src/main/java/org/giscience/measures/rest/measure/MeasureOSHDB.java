@@ -42,10 +42,21 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         this._mapperClass = (Class) parametrizedType.getActualTypeArguments()[1];
     }
 
+    // TODO use this data (value or null)
+    public Integer intervalInDays() {
+        return 30;
+    }
+
     @Override
     public ZonedDateTime defaultDate() {
+//        TODO
 //        System.out.println(this._oshdb.metadata("date"));
         return ZonedDateTime.now(UTC).with(TemporalAdjusters.firstDayOfMonth()).truncatedTo(DAYS);
+    }
+
+    @Override
+    public Integer defaultDaysBefore() {
+        return 3 * 12 * 30;
     }
 
     @Override
