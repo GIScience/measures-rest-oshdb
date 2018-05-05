@@ -7,6 +7,10 @@ import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @author Franz-Benjamin Mocnik
+ */
 public class CombinedIndex {
     private static <I, J, R> TreeMap<I, SortedMap<J, R>> regroupCombinedIndex(SortedMap<OSHDBCombinedIndex<I, J>, R> data) {
         return data.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getFirstIndex(), e -> {
@@ -24,5 +28,4 @@ public class CombinedIndex {
             throw new RuntimeException("Duplicate keys never occur.");
         }, TreeMap::new));
     }
-
 }

@@ -96,6 +96,16 @@ The function `Lineage::saturation` already provides the needed computation neede
 | `Lineage::average` | `SortedMap<I, Number>` | `Number` | average for all timestamps |
 | `Lineage::saturation` | `SortedMap<I, Number>` | `Number` | saturation principle |
 
+### Casting the result
+
+The result of a measure is a `SortedMap` with grid cells as keys and numbers as values, that is, it is of type `SortedMap<GridCell, Number>`.  Many commands like `mapReducer.sum()` return exactly this type, while others like `mapReducer.count()` return the result as `SortedMap<GridCell, Integer>`.  While `Integer` is a subclass of `Number` and can thus be casted, this does not automatically work for the `SortedMap`.  Instead, the value has to be casted manually:
+
+```java
+return Cast.result(mapReducer.count())
+```
+
+This works for all `SortedMap<GridCell, R>` with `X` being castable to `Number`.  When using `CombinedIndex.computeWithAggregate` for aggregation, there should be no need to use `Cast.result` because this is handled by `computeWithAggregate` already.
+
 ### Aggregation by grid cells
 
 The data is automatically aggregated by the `MapAggregator` into grid cells (ISEA 3H DGGS).  If, however, the data shall be aggregated manually, the method `gridCell` offers a simple way to aggregate.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry but rather by the first node of the geometry, by the centroid of the convex hull, etc.
