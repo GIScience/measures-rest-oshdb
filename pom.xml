@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.github.giscience</groupId>
             <artifactId>measures-rest</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>master-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <repositories>
