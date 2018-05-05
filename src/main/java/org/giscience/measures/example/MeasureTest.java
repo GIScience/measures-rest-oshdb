@@ -10,7 +10,12 @@ import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 
 import javax.ws.rs.Path;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.SortedMap;
+
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Path("api/" + MeasureTest.name)
 public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
@@ -22,6 +27,26 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
 
     public MeasureTest(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
         super(oshdb, oshdb_keydb);
+    }
+
+    @Override
+    public Boolean refersToTimeSpan() {
+        return false;
+    }
+
+    @Override
+    public ZonedDateTime defaultDate() {
+        return ZonedDateTime.now(UTC).with(TemporalAdjusters.firstDayOfMonth()).truncatedTo(DAYS);
+    }
+
+    @Override
+    public ZonedDateTime defaultDateFrom() {
+        return null;
+    }
+
+    @Override
+    public Integer defaultDaysBefore() {
+        return 3 * 365;
     }
 
     @Override

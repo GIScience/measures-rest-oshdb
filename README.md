@@ -30,7 +30,31 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding time span.  If the begin of the time span is not provided, `2004-01-01T00:00Z` is automatically used as a default value.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).
+
+The default values for the measure can be defined in the class `MeasureOSDHB`.  Further information can be found in the documentation of the library [Measures REST](https://github.com/giscience/measures-rest).
+
+```java
+@Override
+public Boolean refersToTimeSpan() {
+    /* ... */
+}
+
+@Override
+public ZonedDateTime defaultDate() {
+    return ZonedDateTime.now(UTC).with(TemporalAdjusters.firstDayOfMonth()).truncatedTo    /* ... */
+}
+
+@Override
+public ZonedDateTime defaultDateFrom() {
+    /* ... */
+}
+
+@Override
+public Integer defaultDaysBefore() {
+    /* ... */
+}
+```
 
 The data is automatically aggregated by the `MapAggregator`.  If, however, the data shall be aggregated manually, the method `gridCell` offers a simple way to aggregate manually.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry but rather by the first node of the geometry, by the centroid of the convex hull, etc.
 
