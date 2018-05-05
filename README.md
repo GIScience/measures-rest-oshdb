@@ -91,10 +91,10 @@ The function `Lineage::saturation` already provides the needed computation neede
 
 | Function | Input | Output| Description |
 | ------ | ---- | ------- | ----------- |
-| `Lineage::min` | SortedMap<I, Number> | Number | Minimum for all timestamps |
-| `Lineage::max` | SortedMap<I, Number> | Number | Maximum for all timestamps |
-| `Lineage::average` | SortedMap<I, Number> | Number | Average for all timestamps |
-| `Lineage::saturation` | SortedMap<I, Number> | Number | Saturation principle |
+| `Lineage::min` | `SortedMap<I, Number>` | `Number` | minimum for all timestamps |
+| `Lineage::max` | `SortedMap<I, Number>` | `Number` | maximum for all timestamps |
+| `Lineage::average` | `SortedMap<I, Number>` | `Number` | average for all timestamps |
+| `Lineage::saturation` | `SortedMap<I, Number>` | `Number` | saturation principle |
 
 ### Aggregation by grid cells
 
