@@ -8,6 +8,7 @@ public class ExampleOSHDB {
         OSHDBH2 oshdb = new OSHDBH2("./sweden.oshdb").multithreading(true);
         RestServer restServer = new RestServer();
         restServer.register(new MeasureTest(oshdb));
+        restServer.register(new MeasureSaturation(oshdb));
         restServer.run();
     }
 }

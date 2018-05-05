@@ -51,7 +51,7 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
 
     @Override
     public Integer defaultDaysBefore() {
-        return 3 * 365;
+        return 3 * 12 * 30;
     }
 
     @Override

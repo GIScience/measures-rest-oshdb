@@ -32,16 +32,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
 
 Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).  Whether the measure refers to one point in time or a time span is determined by the method `refersToTimeSpan` (see below).
 
-If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`:
-
-```java
-    @override
-    public Integer intervalInDays() {
-        return 30;
-    }
-```
-
-By default, the interval is 30 days.  The points in time used for the measures are computed as follows: the last timestamp is the date determined by the parameter `date`; the second last one, 30 days before; the third last one, 60 days before; etc.  The first date is always larger than the date determined by the parameters `dateFrom` and `daysBefore`.  In case of other intervals, the points in time are computed accordingly.
+### Default values
 
 The default values for the measure can be defined in the class `MeasureOSDHB`.  Further information can be found in the documentation of the library [Measures REST](https://github.com/giscience/measures-rest).
 
@@ -67,7 +58,47 @@ public Integer defaultDaysBefore() {
 }
 ```
 
-The data is automatically aggregated by the `MapAggregator`.  If, however, the data shall be aggregated manually, the method `gridCell` offers a simple way to aggregate manually.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry but rather by the first node of the geometry, by the centroid of the convex hull, etc.
+### Lineage
+
+If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`:
+
+```java
+    @override
+    public Integer intervalInDays() {
+        return 30;
+    }
+```
+
+By default, the interval is 30 days.  The points in time used for the measures are computed as follows: the last timestamp is the date determined by the parameter `date`; the second last one, 30 days before; the third last one, 60 days before; etc.  The first date is always larger than the date determined by the parameters `dateFrom` and `daysBefore`.  In case of other intervals, the points in time are computed accordingly.
+
+When the data have been aggregated manually by the timestamps, two indices are used: one for the grid cells and one for the timestamps.  Technically, this results in a `OSHDBCombinedIndex`.  To hide the first index by the grid cells, there is offered a function `CombinedIndex.computeWithAggregate` that consumes two arguments.  The first argument refers to the result of the `mapReducer` after having aggregated by timestamps, and the second argument refers to how the list of values for the different timestamps shall be used for computing the final result.  Thereby, the second argument is used for each grid cell separately.  A measure applying the saturation principle to highways looks, for example, as follows:
+
+```java
+@Override
+public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
+    return CombinedIndex.computeWithAggregate(
+            mapReducer
+                    .osmTag("highway")
+                    .aggregateByTimestamp()
+                    .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))
+                    .sum(),
+            Lineage::saturation
+    );
+}
+```
+
+The function `Lineage::saturation` already provides the needed computation needed to conclude the saturation from a list of road network lengths at different points in time.  In this example, the function consumes a value of type `SortedMap<OSHDBTimestamp, Number>` and results in a `Number`.  Such functions can be inserted manually but different nearby choices already exist:
+
+| Function | Input | Output| Description |
+| ------ | ---- | ------- | ----------- |
+| `Lineage::min` | SortedMap<I, Number> | Number | Minimum for all timestamps |
+| `Lineage::max` | SortedMap<I, Number> | Number | Maximum for all timestamps |
+| `Lineage::average` | SortedMap<I, Number> | Number | Average for all timestamps |
+| `Lineage::saturation` | SortedMap<I, Number> | Number | Saturation principle |
+
+### Aggregation by grid cells
+
+The data is automatically aggregated by the `MapAggregator` into grid cells (ISEA 3H DGGS).  If, however, the data shall be aggregated manually, the method `gridCell` offers a simple way to aggregate.  It accepts either a `OSMEntitySnapshot`, a `OSMContribution`, or a geometry.  A geometry needs to be provided if different ways of aggregation are of interest, for example, when the data should not be aggregated by the centroid of the geometry but rather by the first node of the geometry, by the centroid of the convex hull, etc.
 
 ## Instantiation of the Measure
 
