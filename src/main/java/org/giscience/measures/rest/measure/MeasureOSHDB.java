@@ -1,6 +1,7 @@
 package org.giscience.measures.rest.measure;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.giscience.measures.rest.server.RequestParameter;
 import org.giscience.measures.rest.utils.BoundingBox;
 import org.giscience.utils.geogrid.cells.GridCell;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
@@ -14,9 +15,11 @@ import org.heigit.bigspatialdata.oshdb.util.time.OSHDBTimestamps;
 import java.lang.reflect.ParameterizedType;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.SortedMap;
 
 import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  *
@@ -40,9 +43,15 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     }
 
     @Override
-    protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom) throws Exception {
-        if (dateFrom == null) dateFrom = ZonedDateTime.of(2004, 1, 1, 0, 0, 0, 0, UTC);
-        MapAggregator mapper = this._oshdb.createMapReducer(this._mapperClass)
+    public ZonedDateTime defaultDate() {
+//        System.out.println(this._oshdb.metadata("date"));
+        return ZonedDateTime.now(UTC).with(TemporalAdjusters.firstDayOfMonth()).truncatedTo(DAYS);
+    }
+
+    @Override
+    protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom, RequestParameter p) throws Exception {
+        if (dateFrom == null) dateFrom = date;
+        MapAggregator mapReducer = this._oshdb.createMapReducer(this._mapperClass)
                 .keytables(this._oshdb_keydb)
                 .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat))
                 .timestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), OSHDBTimestamps.Interval.MONTHLY)
@@ -51,7 +60,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
                     if (this._mapperClass == OSMContribution.class) return this.gridCell((OSMContribution) o);
                     return null;
                 });
-        return this.compute(mapper);
+        return this.compute(mapReducer, p);
     }
 
     public GridCell gridCell(OSMEntitySnapshot snapshot) {
@@ -71,5 +80,5 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         }
     }
 
-    public abstract SortedMap<GridCell, R> compute(MapAggregator<GridCell, O> mapReducer) throws Exception;
+    public abstract SortedMap<GridCell, R> compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p) throws Exception;
 }
