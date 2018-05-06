@@ -58,6 +58,19 @@ public Integer defaultDaysBefore() {
 }
 ```
 
+### Computing using the MapReducer result
+
+In some cases, the data computed using the `mapReducer` need to be used in further computations.  In order to do so, the function `Index.computeWithAggregate` can be used, for example, as follows:
+
+```java
+return Index.computeWithAggregate(
+        mapReducer.count(),
+        s -> 2 * s.doubleValue()
+);
+```
+
+Here, the function given in the second argument only refers to the values of the `SortedMap`, while the keys (in our case the grid cells) stay unchanged.
+
 ### Lineage
 
 If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`:
@@ -71,12 +84,12 @@ If a measure refers to a time span, the data are examined at different points in
 
 By default, the interval is 30 days.  The points in time used for the measures are computed as follows: the last timestamp is the date determined by the parameter `date`; the second last one, 30 days before; the third last one, 60 days before; etc.  The first date is always larger than the date determined by the parameters `dateFrom` and `daysBefore`.  In case of other intervals, the points in time are computed accordingly.
 
-When the data have been aggregated manually by the timestamps, two indices are used: one for the grid cells and one for the timestamps.  Technically, this results in a `OSHDBCombinedIndex`.  To hide the first index by the grid cells, there is offered a function `CombinedIndex.computeWithAggregate` that consumes two arguments.  The first argument refers to the result of the `mapReducer` after having aggregated by timestamps, and the second argument refers to how the list of values for the different timestamps shall be used for computing the final result.  Thereby, the second argument is used for each grid cell separately.  A measure applying the saturation principle to highways looks, for example, as follows:
+When the data have been aggregated manually by the timestamps, two indices are used: one for the grid cells and one for the timestamps.  Technically, this results in a `OSHDBCombinedIndex`.  To hide the first index by the grid cells, there is offered a function `Index.computeCombinedWithAggregate` that consumes two arguments.  The first argument refers to the result of the `mapReducer` after having aggregated by timestamps, and the second argument refers to how the list of values for the different timestamps shall be used for computing the final result.  Thereby, the second argument is used for each grid cell separately.  A measure applying the saturation principle to highways looks, for example, as follows:
 
 ```java
 @Override
 public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
-    return CombinedIndex.computeWithAggregate(
+    return Index.computeCombinedWithAggregate(
             mapReducer
                     .osmTag("highway")
                     .aggregateByTimestamp()
@@ -104,7 +117,7 @@ The result of a measure is a `SortedMap` with grid cells as keys and numbers as 
 return Cast.result(mapReducer.count())
 ```
 
-This works for all `SortedMap<GridCell, R>` with `X` being castable to `Number`.  When using `CombinedIndex.computeWithAggregate` for aggregation, there should be no need to use `Cast.result` because this is already handled by `computeWithAggregate` and the corresponding function in the second argument.
+This works for all `SortedMap<GridCell, R>` with `X` being castable to `Number`.  When using `Index.computeCombinedWithAggregate` for aggregation, there should be no need to use `Cast.result` because this is already handled by `computeCombinedWithAggregate` and the corresponding function in the second argument.
 
 ### Aggregation by grid cells
 
