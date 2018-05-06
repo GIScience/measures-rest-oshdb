@@ -15,6 +15,10 @@ public class Lineage {
         return s.values().stream().mapToDouble(Number::doubleValue).max().orElse(Double.NaN);
     }
 
+    public static <I, N extends Number> Number sum(SortedMap<I, N> s) {
+        return s.values().stream().mapToDouble(Number::doubleValue).sum();
+    }
+
     public static <I, N extends Number> Number average(SortedMap<I, N> s) {
         return s.values().stream().mapToDouble(Number::doubleValue).average().orElse(Double.NaN);
     }
