@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Franz-Benjamin Mocnik
  */
 public class Index {
-    public static <I, R, S> TreeMap<I, R> computeWithAggregate(SortedMap<I, S> m, Function<S, R> f) {
+    public static <I, R, S> TreeMap<I, R> map(SortedMap<I, S> m, Function<S, R> f) {
         return m.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> f.apply(e.getValue()), (v1, v2) -> {
             throw new RuntimeException("Duplicate keys never occur.");
         }, TreeMap::new));
@@ -29,7 +29,7 @@ public class Index {
         }, TreeMap::new));
     }
 
-    public static <I, J, R, S> TreeMap<I, R> computeCombinedWithAggregate(SortedMap<OSHDBCombinedIndex<I, J>, S> m, Function<SortedMap<J, S>, R> f) {
+    public static <I, J, R, S> TreeMap<I, R> reduce(SortedMap<OSHDBCombinedIndex<I, J>, S> m, Function<SortedMap<J, S>, R> f) {
         return Index.regroupCombinedIndex(m).entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> f.apply(e.getValue()), (v1, v2) -> {
             throw new RuntimeException("Duplicate keys never occur.");
         }, TreeMap::new));

@@ -33,7 +33,7 @@ public class MeasureSaturation extends MeasureOSHDB<Number, OSMEntitySnapshot> {
 
     @Override
     public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
-        return Index.computeCombinedWithAggregate(
+        return Index.reduce(
                 mapReducer
                         .osmTag("highway", "residential")
                         .aggregateByTimestamp(snapshot -> snapshot.getTimestamp())
