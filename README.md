@@ -104,7 +104,7 @@ The result of a measure is a `SortedMap` with grid cells as keys and numbers as 
 return Cast.result(mapReducer.count())
 ```
 
-This works for all `SortedMap<GridCell, R>` with `X` being castable to `Number`.  When using `CombinedIndex.computeWithAggregate` for aggregation, there should be no need to use `Cast.result` because this is handled by `computeWithAggregate` already.
+This works for all `SortedMap<GridCell, R>` with `X` being castable to `Number`.  When using `CombinedIndex.computeWithAggregate` for aggregation, there should be no need to use `Cast.result` because this is already handled by `computeWithAggregate` and the corresponding function in the second argument.
 
 ### Aggregation by grid cells
 
