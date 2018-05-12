@@ -56,6 +56,11 @@ public ZonedDateTime defaultDateFrom() {
 public Integer defaultDaysBefore() {
     return 3 * 12 * 30;
 }
+
+@Override
+public Integer defaultIntervalInDays() {
+    return 30;
+}
 ```
 
 ### Computing using the MapReducer result
@@ -73,14 +78,7 @@ Here, the function given in the second argument only refers to the values of the
 
 ### Lineage
 
-If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`:
-
-```java
-    @override
-    public Integer intervalInDays() {
-        return 30;
-    }
-```
+If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`.
 
 By default, the interval is 30 days.  The points in time used for the measures are computed as follows: the last timestamp is the date determined by the parameter `date`; the second last one, 30 days before; the third last one, 60 days before; etc.  The first date is always larger than the date determined by the parameters `dateFrom` and `daysBefore`.  In case of other intervals, the points in time are computed accordingly.
 

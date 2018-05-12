@@ -10,6 +10,7 @@ import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSHDBMapReducible;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMContribution;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
+import org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox;
 import org.heigit.bigspatialdata.oshdb.util.time.OSHDBTimestamps;
 
 import java.lang.reflect.ParameterizedType;
@@ -42,11 +43,6 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         this._mapperClass = (Class) parametrizedType.getActualTypeArguments()[1];
     }
 
-    // TODO use this data (value or null)
-    public Integer intervalInDays() {
-        return 30;
-    }
-
     @Override
     public ZonedDateTime defaultDate() {
 //        TODO
@@ -60,12 +56,17 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     }
 
     @Override
-    protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom, RequestParameter p) throws Exception {
+    public Integer defaultIntervalInDays() {
+        return 30;
+    }
+
+    @Override
+    protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom, Integer intervalInDays, RequestParameter p) throws Exception {
         if (dateFrom == null) dateFrom = date;
         MapAggregator mapReducer = this._oshdb.createMapReducer(this._mapperClass)
                 .keytables(this._oshdb_keydb)
-                .areaOfInterest(new org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat))
-                .timestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), OSHDBTimestamps.Interval.MONTHLY)
+                .areaOfInterest(new OSHDBBoundingBox(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat))
+                .timestamps(new OSHDBTimestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), String.format("P%0$dD", intervalInDays), true))
                 .aggregateBy(o -> {
                     if (this._mapperClass == OSMEntitySnapshot.class) return this.gridCell((OSMEntitySnapshot) o);
                     if (this._mapperClass == OSMContribution.class) return this.gridCell((OSMContribution) o);

@@ -30,11 +30,6 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     }
 
     @Override
-    public Integer intervalInDays() {
-        return 30;
-    }
-
-    @Override
     public Boolean refersToTimeSpan() {
         return false;
     }
@@ -52,6 +47,11 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     @Override
     public Integer defaultDaysBefore() {
         return 3 * 12 * 30;
+    }
+
+    @Override
+    public Integer defaultIntervalInDays() {
+        return 30;
     }
 
     @Override
