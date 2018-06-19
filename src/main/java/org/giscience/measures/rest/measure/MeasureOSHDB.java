@@ -92,5 +92,9 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         }
     }
 
+    public OSHDBDatabase getOSHDB() {
+        return this._oshdb;
+    }
+
     public abstract SortedMap<GridCell, R> compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p) throws Exception;
 }
