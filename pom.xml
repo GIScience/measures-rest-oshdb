@@ -44,6 +44,15 @@
             <name>Heigit/GIScience maven repository (snapshots)</name>
             <url>http://repo.heigit.org/artifactory/libs-snapshot-local</url>
         </repository>
+        
+        <repository>
+            <!--This will resolve artefacts of Osgeo, Boundless and potentially others through our own reopository (https://www.jfrog.com/confluence/display/RTF/Maven+Repository#MavenRepository-ResolvingArtifactsthroughArtifactory).-->
+            <id>HeiGIT main</id>
+            <name>Central Repository for OSHDB dependency related artefacts</name>
+             <url>http://repo.heigit.org/artifactory/main</url>
+        </repository>
+
+        
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
