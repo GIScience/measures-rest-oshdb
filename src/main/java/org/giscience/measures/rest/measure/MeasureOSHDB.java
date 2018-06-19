@@ -90,7 +90,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
             return this._grid.cellForCentroid(g);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return null;
         }
     }
 
