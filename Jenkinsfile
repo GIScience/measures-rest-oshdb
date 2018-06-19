@@ -19,6 +19,7 @@ pipeline {
         script {
           server = Artifactory.server 'HeiGIT Repo'
           rtMaven = Artifactory.newMavenBuild()
+          rtMaven.resolver server: server, releaseRepo: 'main', snapshotRepo: 'main'
           rtMaven.deployer server: server, releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local'
           rtMaven.deployer.deployArtifacts = false
           env.MAVEN_HOME = '/usr/share/maven'
