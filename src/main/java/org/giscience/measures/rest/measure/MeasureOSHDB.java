@@ -80,8 +80,8 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     }
 
     public GridCell gridCell(OSMContribution contribution) {
-        Geometry g = contribution.getGeometryBefore();
-        if (g == null) return null;
+        Geometry g = contribution.getGeometryUnclippedBefore();
+        if (g == null) g = contribution.getGeometryUnclippedAfter();
         return this.gridCell(g);
     }
 
@@ -90,7 +90,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
             return this._grid.cellForCentroid(g);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
