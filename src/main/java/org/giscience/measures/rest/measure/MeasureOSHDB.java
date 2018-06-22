@@ -27,20 +27,24 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * @author Franz-Benjamin Mocnik
  */
 public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measure<R> {
-    private OSHDBDatabase _oshdb;
-    private OSHDBJdbc _oshdb_keydb;
-    private Class<O> _mapperClass;
+    private OSHDBDatabase _oshdb = null;
+    private OSHDBJdbc _oshdb_keydb = null;
+    private Class<O> _mapperClass = null;
 
-    public MeasureOSHDB(OSHDBJdbc oshdb) {
-        this(oshdb, oshdb);
+    protected MeasureOSHDB() {
+        super();
     }
 
-    public MeasureOSHDB(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
-        super();
+    public MeasureOSHDB<R, O> setOSHDB(OSHDBJdbc oshdb) {
+        return this.setOSHDB(oshdb, oshdb);
+    }
+
+    public MeasureOSHDB<R, O> setOSHDB(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
         this._oshdb = oshdb;
         this._oshdb_keydb = oshdb_keydb;
         ParameterizedType parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
         this._mapperClass = (Class) parametrizedType.getActualTypeArguments()[1];
+        return this;
     }
 
     @Override
@@ -62,6 +66,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
 
     @Override
     protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom, Integer intervalInDays, RequestParameter p) throws Exception {
+        if (this._oshdb == null) throw new Exception("Measure not initialized.  Please provide information about hte OSHDB by using setOSHDB.");
         if (dateFrom == null) dateFrom = date;
         MapAggregator mapReducer = this._oshdb.createMapReducer(this._mapperClass)
                 .keytables(this._oshdb_keydb)
@@ -95,7 +100,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         }
     }
 
-    public OSHDBDatabase getOSHDB() {
+    protected OSHDBDatabase getOSHDB() {
         return this._oshdb;
     }
 

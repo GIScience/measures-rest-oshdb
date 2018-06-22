@@ -7,8 +7,8 @@ public class ExampleOSHDB {
     public static void main(String[] args) throws Exception {
         OSHDBH2 oshdb = new OSHDBH2("./sweden.oshdb").multithreading(true);
         RestServer restServer = new RestServer();
-        restServer.register(new MeasureTest(oshdb));
-        restServer.register(new MeasureSaturation(oshdb));
+        restServer.register(new MeasureTest().setOSHDB(oshdb));
+        restServer.register(new MeasureSaturation().setOSHDB(oshdb));
         restServer.run();
     }
 }

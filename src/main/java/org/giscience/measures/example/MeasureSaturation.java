@@ -5,8 +5,6 @@ import org.giscience.measures.rest.server.RequestParameter;
 import org.giscience.measures.tools.Index;
 import org.giscience.measures.tools.Lineage;
 import org.giscience.utils.geogrid.cells.GridCell;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDBJdbc;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
@@ -14,14 +12,6 @@ import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 import java.util.SortedMap;
 
 public class MeasureSaturation extends MeasureOSHDB<Number, OSMEntitySnapshot> {
-
-    public MeasureSaturation(OSHDBJdbc oshdb) {
-        super(oshdb);
-    }
-
-    public MeasureSaturation(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
-        super(oshdb, oshdb_keydb);
-    }
 
     @Override
     public Boolean refersToTimeSpan() {

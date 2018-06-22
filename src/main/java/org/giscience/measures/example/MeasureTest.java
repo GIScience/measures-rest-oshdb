@@ -3,8 +3,6 @@ package org.giscience.measures.example;
 import org.giscience.measures.rest.measure.MeasureOSHDB;
 import org.giscience.measures.rest.server.RequestParameter;
 import org.giscience.utils.geogrid.cells.GridCell;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
-import org.heigit.bigspatialdata.oshdb.api.db.OSHDBJdbc;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
@@ -17,14 +15,6 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
-
-    public MeasureTest(OSHDBJdbc oshdb) {
-        super(oshdb);
-    }
-
-    public MeasureTest(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
-        super(oshdb, oshdb_keydb);
-    }
 
     @Override
     public Boolean refersToTimeSpan() {

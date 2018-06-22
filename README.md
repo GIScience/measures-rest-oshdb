@@ -7,18 +7,7 @@ The library `Measues REST OSHDB` provides an extension to the library [Measures 
 A measure that consumes data from the [OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped.  As an example, one may extend the class `MeasureOSHDB` as follows:
 
 ```java
-@Path("api/" + MeasureLengthOfElements.name)
 public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnapshot> {
-    public static final String name = "measure-length-of-elements";
-
-    public MeasureTest(OSHDBJdbc oshdb) {
-        super(oshdb);
-    }
-
-    public MeasureTest(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
-        super(oshdb, oshdb_keydb);
-    }
-
     @Override
     public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
         return mapReducer
@@ -129,7 +118,7 @@ In contrast to the class `Measure`, the constructor of the class `MeasureOSHDB` 
 ```java
 OSHDBDatabase oshdb = new OSHDBH2(...);
 RestServer restServer = new RestServer();
-restServer.register(new MeasureLengthOfElements(oshdb));
+restServer.register(new MeasureLengthOfElements().setOSHDB(oshdb));
 restServer.run();
 ```
 
@@ -139,7 +128,7 @@ Instead of using only one database for the data as well as for the keytables, al
 OSHDBDatabase oshdb = new OSHDBH2(...).multithreading(true);
 OSHDBJdbc oshdbKeydb = new OSHDBH2(...);
 RestServer restServer = new RestServer();
-restServer.register(new MeasureLengthOfElements(oshdb, oshdbKeydb));
+restServer.register(new MeasureLengthOfElements().setOSHDB(oshdb, oshdbKeydb));
 ```
 
 ## Author
