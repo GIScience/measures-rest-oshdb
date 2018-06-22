@@ -9,7 +9,6 @@ import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 
-import javax.ws.rs.Path;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.SortedMap;
@@ -17,9 +16,7 @@ import java.util.SortedMap;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-@Path("api/" + MeasureTest.name)
 public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
-    public static final String name = "measure-test";
 
     public MeasureTest(OSHDBJdbc oshdb) {
         super(oshdb);

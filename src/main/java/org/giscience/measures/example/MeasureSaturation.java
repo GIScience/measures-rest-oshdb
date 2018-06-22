@@ -11,12 +11,9 @@ import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.geometry.Geo;
 
-import javax.ws.rs.Path;
 import java.util.SortedMap;
 
-@Path("api/" + MeasureSaturation.name)
 public class MeasureSaturation extends MeasureOSHDB<Number, OSMEntitySnapshot> {
-    public static final String name = "measure-saturation";
 
     public MeasureSaturation(OSHDBJdbc oshdb) {
         super(oshdb);
