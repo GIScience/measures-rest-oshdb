@@ -80,8 +80,9 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     }
 
     public GridCell gridCell(OSMContribution contribution) {
-        Geometry g = contribution.getGeometryUnclippedBefore();
-        if (g == null) g = contribution.getGeometryUnclippedAfter();
+        Geometry g = contribution.getGeometryUnclippedAfter();
+        if (g == null || g.isEmpty()) g = contribution.getGeometryUnclippedBefore();
+        if (g == null || g.isEmpty()) throw new RuntimeException("missing geometry for " + contribution.getOSHEntity().getId());
         return this.gridCell(g);
     }
 
