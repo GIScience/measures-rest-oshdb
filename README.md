@@ -2,6 +2,18 @@
 
 The library `Measues REST OSHDB` provides an extension to the library [Measures REST](https://github.com/giscience/measures-rest).  It aids with implementing a measure that consumes data from the [OpenStreetMap History Database (OSHDB)](???).
 
+## Scientific Publications
+
+The following publication is related to this framework and the used DGGS:
+
+* F-B Mocnik: **Linked Open Data Vocabularies for Semantically Annotated Repositories of Data Quality Measures** Proceedings of the 10th International Conference on Geographic Information Science (GIScience), 2018
+
+* F-B Mocnik, A Mobasheri, L Griesbaum, M Eckle, C Jacobs, and C Klonner: [**A grounding-based ontology of data quality measures**](http://josis.org/index.php/josis/article/viewFile/360/197) Journal of Spatial Information Science, 16, 2018
+
+* F-B Mocnik: [**A Novel Identifier Scheme for the ISEA Aperture 3 Hexagon Discrete Global Grid System.**](http://doi.org/10.1080/15230406.2018.1455157) Cartography and Geographic Information science, 2018
+
+* F-B Mocnik, A Zipf, and M Raifer: [**The OpenStreetMap folksonomy and its evolution.**](http://doi.org/10.1080/10095020.2017.1368193) Geo-spatial Information Science, 20(3), 2017, 219–230
+
 ## Implementing a Measure
 
 A measure that consumes data from the [OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped.  As an example, one may extend the class `MeasureOSHDB` as follows:
