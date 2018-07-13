@@ -1,6 +1,7 @@
 package org.giscience.measures.rest.measure;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.giscience.measures.rest.server.OSHDBRequestParameter;
 import org.giscience.measures.rest.server.RequestParameter;
 import org.giscience.measures.rest.utils.BoundingBox;
 import org.giscience.utils.geogrid.cells.GridCell;
@@ -77,7 +78,7 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
                     if (this._mapperClass == OSMContribution.class) return this.gridCell((OSMContribution) o);
                     return null;
                 });
-        return this.compute(mapReducer, p);
+        return this.compute(mapReducer, new OSHDBRequestParameter(p));
     }
 
     public GridCell gridCell(OSMEntitySnapshot snapshot) {
@@ -104,5 +105,5 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
         return this._oshdb;
     }
 
-    public abstract SortedMap<GridCell, R> compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p) throws Exception;
+    public abstract SortedMap<GridCell, R> compute(MapAggregator<GridCell, O> mapReducer, OSHDBRequestParameter p) throws Exception;
 }

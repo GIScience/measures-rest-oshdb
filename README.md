@@ -21,7 +21,7 @@ A measure that consumes data from the [OSHDB](???) extends the class `MeasureOSH
 ```java
 public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     @Override
-    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, OSHDBRequestParameter p) throws Exception {
         return mapReducer
                 .osmTag("highway", "residential")
                 .osmTag("maxspeed")
@@ -31,7 +31,23 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, RequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).  Whether the measure refers to one point in time or a time span is determined by the method `refersToTimeSpan` (see below).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, OSHDBRequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).  Whether the measure refers to one point in time or a time span is determined by the method `refersToTimeSpan` (see below).
+
+### Using REST URL parameters
+
+Parameters from the REST URL can easily be used in the same way as in [Measure REST](https://github.com/giscience/measures-rest).  As an example, `p.get("hello").toString()` provides the value for the key `hello` provided in the URL.
+
+To simplify the filtering by a tag (key and value) in the OSHDB, one can filter like follows:
+
+```java
+mapReducer.osmTag(p.getOSMTag());
+```
+
+In this case, the `key` and `value` provided in the URL will be used for filtering.  If only a `key` is available, it is only filtered for a key.  In some cases, one might want to provide the parameters using other keys in the URL.  In this case, the keys can manually be provided, e.g., as follows:
+
+```java
+mapReducer.osmTag(p.getOSMTag("newKey", "newValue"));
+```
 
 ### Default values
 
@@ -87,7 +103,7 @@ When the data have been aggregated manually by the timestamps, two indices are u
 
 ```java
 @Override
-public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
+public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, OSHDBRequestParameter p) throws Exception {
     return Index.reduce(
             mapReducer
                     .osmTag("highway")

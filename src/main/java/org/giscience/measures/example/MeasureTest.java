@@ -1,7 +1,7 @@
 package org.giscience.measures.example;
 
 import org.giscience.measures.rest.measure.MeasureOSHDB;
-import org.giscience.measures.rest.server.RequestParameter;
+import org.giscience.measures.rest.server.OSHDBRequestParameter;
 import org.giscience.utils.geogrid.cells.GridCell;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
@@ -42,8 +42,10 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     }
 
     @Override
-    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, OSHDBRequestParameter p) throws Exception {
+        System.out.println(p.getOSMTag());
         return mapReducer
+//                .osmTag(p.getOSMTag())
                 .osmTag("highway", "residential")
                 .osmTag("maxspeed")
                 .map(snapshot -> Geo.lengthOf(snapshot.getGeometry()))

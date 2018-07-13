@@ -1,7 +1,7 @@
 package org.giscience.measures.example;
 
 import org.giscience.measures.rest.measure.MeasureOSHDB;
-import org.giscience.measures.rest.server.RequestParameter;
+import org.giscience.measures.rest.server.OSHDBRequestParameter;
 import org.giscience.measures.tools.Index;
 import org.giscience.measures.tools.Lineage;
 import org.giscience.utils.geogrid.cells.GridCell;
@@ -19,7 +19,7 @@ public class MeasureSaturation extends MeasureOSHDB<Number, OSMEntitySnapshot> {
     }
 
     @Override
-    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, RequestParameter p) throws Exception {
+    public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, OSHDBRequestParameter p) throws Exception {
         return Index.reduce(
                 mapReducer
                         .osmTag("highway", "residential")
