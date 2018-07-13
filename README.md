@@ -43,11 +43,13 @@ To simplify the filtering by a tag (key and value) in the OSHDB, one can filter 
 mapReducer.osmTag(p.getOSMTag());
 ```
 
-In this case, the `key` and `value` provided in the URL will be used for filtering.  If only a `key` is available, it is only filtered for a key.  In some cases, one might want to provide the parameters using other keys in the URL.  In this case, the keys can manually be provided, e.g., as follows:
+In this case, the `key` and `value` provided in the URL will be used for filtering.  If only a `key` is available, the data is only filtered by the key.  In some cases, one might want to provide the parameters using other keys in the URL.  In this case, the keys can manually be provided, e.g., as follows:
 
 ```java
 mapReducer.osmTag(p.getOSMTag("newKey", "newValue"));
 ```
+
+The URL should accordingly contain `...&newKey=highway&newValue=residential)`.
 
 ### Default values
 
