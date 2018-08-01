@@ -1,6 +1,6 @@
 # Measures REST OSHDB
 
-The library `Measures REST OSHDB` provides an extension to the library [Measures REST](https://github.com/giscience/measures-rest).  It aids with implementing a measure that consumes data from the [OpenStreetMap History Database (OSHDB)](???).
+The library `Measures REST OSHDB` provides an extension to the library [Measures REST](https://github.com/giscience/measures-rest).  It aids with implementing a measure that consumes data from the [OpenStreetMap History Database (OSHDB)](https://github.com/giscience/oshdb).
 
 ## Scientific Publications
 
@@ -16,7 +16,7 @@ The following publication is related to this framework and the used DGGS:
 
 ## Implementing a Measure
 
-A measure that consumes data from the [OSHDB](???) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped.  As an example, one may extend the class `MeasureOSHDB` as follows:
+A measure that consumes data from the [OSHDB](https://github.com/giscience/oshdb) extends the class `MeasureOSHDB<R, O extends OSHDBMapReducible>`.  Here, `R` is a generic parameter that refers to the result of the measure; and `O` is the class to be mapped.  As an example, one may extend the class `MeasureOSHDB` as follows:
 
 ```java
 public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnapshot> {
@@ -31,7 +31,7 @@ public class MeasureLengthOfElements extends MeasureOSHDB<Number, OSMEntitySnaps
 }
 ```
 
-Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, OSHDBRequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](???).  Whether the measure refers to one point in time or a time span is determined by the method `refersToTimeSpan` (see below).
+Instead of the function `compute(BoundingBox bbox)`, the function `compute(MapAggregator<GridCell, O> mapReducer, OSHDBRequestParameter p)` can be overwritten in order to implement the actual measure.  As a parameter, a mapReducer object is provided that already refers to the corresponding bounding box and the corresponding point in time or time span.  The mapReducer can be used to filter and aggregate the data, as is described in the documentation of the [OSHDB](https://github.com/giscience/oshdb).  Whether the measure refers to one point in time or a time span is determined by the method `refersToTimeSpan` (see below).
 
 ### Using REST URL parameters
 
@@ -152,7 +152,7 @@ restServer.register(new MeasureLengthOfElements().setOSHDB(oshdb));
 restServer.run();
 ```
 
-Instead of using only one database for the data as well as for the keytables, also two separate databases can be used (compare the documentation of the [OSHDB](???)):
+Instead of using only one database for the data as well as for the keytables, also two separate databases can be used (compare the documentation of the [OSHDB](https://github.com/giscience/oshdb)):
 
 ```java
 OSHDBDatabase oshdb = new OSHDBH2(...).multithreading(true);
