@@ -2,10 +2,12 @@ package org.giscience.measures.tools;
 
 import org.heigit.bigspatialdata.oshdb.api.generic.OSHDBCombinedIndex;
 
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -16,6 +18,10 @@ public class Index {
         return m.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> f.apply(e.getValue()), (v1, v2) -> {
             throw new RuntimeException("Duplicate keys never occur.");
         }, TreeMap::new));
+    }
+
+    public static <I, R, S> TreeMap<I, R> mapStream(SortedMap<I, Collection<S>> m, Function<Stream<S>, R> f) {
+        return Index.map(m, c -> f.apply(c.stream()));
     }
 
     private static <I, J, R> TreeMap<I, SortedMap<J, R>> regroupCombinedIndex(SortedMap<OSHDBCombinedIndex<I, J>, R> data) {

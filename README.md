@@ -95,6 +95,17 @@ return Index.map(
 
 Here, the function given in the second argument only refers to the values of the `SortedMap`, while the keys (in our case the grid cells) stay unchanged.
 
+Another option is to use the function `Index.mapStream`, which maps in a similar way to `Index.map` but provides a stream as argument for the mapping function:
+
+```java
+return Index.mapStream(
+        mapReducer.map(...).collect(),
+        s.map(...).collect(Collectors.toSet())
+);
+```
+
+While the function `Index.mapStream` is usually not necessary, there arise cases in which the OSHDB API does not provide the flexibility of the class `Stream`.  In such cases, the function `Index.mapStream` can be helpful.
+
 ### Lineage
 
 If a measure refers to a time span, the data are examined at different points in time.  These points in time are all in the time span provided by the URL or the default values given within the implementation (see below).  The interval – the number of days between two such points in time – can be defined in the implementation of the measure by overriding the method `intervalInDays`.
