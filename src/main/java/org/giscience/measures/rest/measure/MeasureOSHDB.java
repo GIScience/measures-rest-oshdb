@@ -8,6 +8,7 @@ import org.giscience.utils.geogrid.cells.GridCell;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDBDatabase;
 import org.heigit.bigspatialdata.oshdb.api.db.OSHDBJdbc;
 import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapAggregator;
+import org.heigit.bigspatialdata.oshdb.api.mapreducer.MapReducer;
 import org.heigit.bigspatialdata.oshdb.api.object.OSHDBMapReducible;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMContribution;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
@@ -69,16 +70,15 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     protected SortedMap<GridCell, R> compute(BoundingBox bbox, ZonedDateTime date, ZonedDateTime dateFrom, Integer intervalInDays, RequestParameter p) throws Exception {
         if (this._oshdb == null) throw new Exception("Measure not initialized.  Please provide information about hte OSHDB by using setOSHDB.");
         if (dateFrom == null) dateFrom = date;
-        MapAggregator mapReducer = this._oshdb.createMapReducer(this._mapperClass)
+        MapReducer mapReducer = this._oshdb.createMapReducer(this._mapperClass)
                 .keytables(this._oshdb_keydb)
                 .areaOfInterest(new OSHDBBoundingBox(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat))
-                .timestamps(new OSHDBTimestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), String.format("P%0$dD", intervalInDays), true))
-                .aggregateBy(o -> {
-                    if (this._mapperClass == OSMEntitySnapshot.class) return this.gridCell((OSMEntitySnapshot) o);
-                    if (this._mapperClass == OSMContribution.class) return this.gridCell((OSMContribution) o);
-                    return null;
-                });
-        return this.compute(mapReducer, new OSHDBRequestParameter(p));
+                .timestamps(new OSHDBTimestamps(dateFrom.format(DateTimeFormatter.ISO_LOCAL_DATE), date.format(DateTimeFormatter.ISO_LOCAL_DATE), String.format("P%0$dD", intervalInDays), true));
+        MapAggregator mapReducer2;
+        if (this._mapperClass == OSMEntitySnapshot.class) mapReducer2 = mapReducer.aggregateBy(o -> this.gridCell((OSMEntitySnapshot) o));
+        else if (this._mapperClass == OSMContribution.class) mapReducer2 = mapReducer.aggregateBy(o -> this.gridCell((OSMContribution) o));
+        else mapReducer2 = mapReducer.aggregateBy(o -> null);
+        return this.compute(mapReducer2, new OSHDBRequestParameter(p));
     }
 
     public GridCell gridCell(OSMEntitySnapshot snapshot) {
