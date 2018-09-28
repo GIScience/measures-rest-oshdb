@@ -16,6 +16,7 @@ import org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox;
 import org.heigit.bigspatialdata.oshdb.util.time.OSHDBTimestamps;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -44,8 +45,13 @@ public abstract class MeasureOSHDB<R, O extends OSHDBMapReducible> extends Measu
     public MeasureOSHDB<R, O> setOSHDB(OSHDBDatabase oshdb, OSHDBJdbc oshdb_keydb) {
         this._oshdb = oshdb;
         this._oshdb_keydb = oshdb_keydb;
-        ParameterizedType parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        this._mapperClass = (Class) parametrizedType.getActualTypeArguments()[1];
+        Class<?> superClass = getClass();
+        Type superType;
+        do {
+            superType = superClass.getGenericSuperclass();
+            superClass = (Class<?>) ((superType instanceof Class<?>) ? superType : ((ParameterizedType) superType).getRawType());
+        } while (!(superClass.equals(MeasureOSHDB.class)));
+        this._mapperClass = (Class) ((ParameterizedType) superType).getActualTypeArguments()[1];
         return this;
     }
 
