@@ -43,7 +43,7 @@ public class MeasureTest extends MeasureOSHDB<Number, OSMEntitySnapshot> {
 
     @Override
     public SortedMap<GridCell, Number> compute(MapAggregator<GridCell, OSMEntitySnapshot> mapReducer, OSHDBRequestParameter p) throws Exception {
-        System.out.println(p.getOSMTag());
+//        System.out.println(p.getOSMTag());
         return mapReducer
 //                .osmTag(p.getOSMTag())
                 .osmTag("highway", "residential")
