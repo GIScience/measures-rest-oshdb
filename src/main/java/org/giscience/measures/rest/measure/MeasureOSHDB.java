@@ -1,6 +1,5 @@
 package org.giscience.measures.rest.measure;
 
-import com.vividsolutions.jts.geom.Geometry;
 import org.giscience.measures.rest.server.OSHDBRequestParameter;
 import org.giscience.measures.rest.server.RequestParameter;
 import org.giscience.measures.rest.utils.BoundingBox;
@@ -14,6 +13,7 @@ import org.heigit.bigspatialdata.oshdb.api.object.OSMContribution;
 import org.heigit.bigspatialdata.oshdb.api.object.OSMEntitySnapshot;
 import org.heigit.bigspatialdata.oshdb.util.OSHDBBoundingBox;
 import org.heigit.bigspatialdata.oshdb.util.time.OSHDBTimestamps;
+import org.locationtech.jts.geom.Geometry;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
