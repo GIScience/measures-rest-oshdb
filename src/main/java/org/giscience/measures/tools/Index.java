@@ -2,7 +2,9 @@ package org.giscience.measures.tools;
 
 import org.heigit.bigspatialdata.oshdb.api.generic.OSHDBCombinedIndex;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -24,7 +26,7 @@ public class Index {
         return Index.map(m, c -> f.apply(c.stream()));
     }
 
-    private static <I, J, R> TreeMap<I, SortedMap<J, R>> regroupCombinedIndex(SortedMap<OSHDBCombinedIndex<I, J>, R> data) {
+    private static <I extends Comparable<I> & Serializable, J extends Comparable<J> & Serializable, R> TreeMap<I, SortedMap<J, R>> regroupCombinedIndex(SortedMap<OSHDBCombinedIndex<I, J>, R> data) {
         return data.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getFirstIndex(), e -> {
             SortedMap<J, R> m = new TreeMap<>();
             m.put(e.getKey().getSecondIndex(), e.getValue());
@@ -35,8 +37,8 @@ public class Index {
         }, TreeMap::new));
     }
 
-    public static <I, J, R, S> TreeMap<I, R> reduce(SortedMap<OSHDBCombinedIndex<I, J>, S> m, Function<SortedMap<J, S>, R> f) {
-        return Index.regroupCombinedIndex(m).entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> f.apply(e.getValue()), (v1, v2) -> {
+    public static <I extends Comparable<I> & Serializable, J extends Comparable<J> & Serializable, R, S> TreeMap<I, R> reduce(SortedMap<OSHDBCombinedIndex<I, J>, S> m, Function<SortedMap<J, S>, R> f) {
+        return Index.regroupCombinedIndex(m).entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> f.apply((SortedMap<J, S>) e.getValue()), (v1, v2) -> {
             throw new RuntimeException("Duplicate keys never occur.");
         }, TreeMap::new));
     }
